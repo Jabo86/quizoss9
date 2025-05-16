@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulazione Concorso Operatore Socio Sanitario - Modulo 19</title>
+    <style>
+        /* Stesso stile CSS del Modulo 18, omesso per brevità */
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Simulazione Concorso Operatore Socio Sanitario - Modulo 19</h1>
+        <div class="question-nav" id="questionNav"></div>
+        <div id="timer">Tempo rimanente: <span id="time">30:00</span></div>
+        <div id="quiz"></div>
+        <div class="navigation">
+            <button class="nav-button" id="prev" disabled>⬅ Indietro</button>
+            <button class="nav-button" id="next">Avanti ➡</button>
+        </div>
+        <button id="submit">Invia Risposte</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Array di domande (541-570) simulate, uniche rispetto ai Moduli 1-18 e ai Moduli 18 e 20
+        const questions = [
+            {
+                question: "Durante il bagno a letto di un paziente allettato, l’OSS deve:",
+                options: [
+                    "proteggere il letto con teli impermeabili",
+                    "usare acqua bollente",
+                    "ignorare la privacy"
+                ],
+                correct: "proteggere il letto con teli impermeabili",
+                explanation: "Il bagno a letto richiede teli impermeabili per mantenere il letto asciutto. L’OSS deve garantire privacy, usare acqua tiepida, e segnalare all’infermiere irritazioni cutanee."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di irritazione cutanea durante il bagno?",
+                options: [
+                    "arrossamento e bruciore",
+                    "cute liscia",
+                    "assenza di sintomi"
+                ],
+                correct: "arrossamento e bruciore",
+                explanation: "Arrossamento e bruciore indicano irritazione cutanea. L’OSS deve usare detergenti delicati, asciugare bene, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "La cura delle unghie di un paziente include:",
+                options: [
+                    "taglio con forbici pulite e arrotondamento",
+                    "taglio con forbici sporche",
+                    "ignorare le unghie incarnite"
+                ],
+                correct: "taglio con forbici pulite e arrotondamento",
+                explanation: "La cura delle unghie richiede forbici pulite e arrotondamento per prevenire lesioni. L’OSS deve monitorare le unghie, evitare tagli aggressivi, e segnalare all’infermiere unghie incarnite."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di unghia incarnita?",
+                options: [
+                    "arrossamento e dolore",
+                    "unghia liscia",
+                    "crescita regolare"
+                ],
+                correct: "arrossamento e dolore",
+                explanation: "Arrossamento e dolore indicano un’unghia incarnita. L’OSS deve monitorare la zona, evitare pressioni, e segnalare all’infermiere per una gestione medica."
+            },
+            {
+                question: "L’igiene orale di un paziente con protesi dentaria include:",
+                options: [
+                    "rimozione e pulizia della protesi",
+                    "lavaggio con alcool",
+                    "ignorare la protesi"
+                ],
+                correct: "rimozione e pulizia della protesi",
+                explanation: "L’igiene orale richiede rimozione e pulizia della protesi con acqua e spazzolino. L’OSS deve monitorare la mucosa orale e segnalare all’infermiere lesioni o infezioni."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di infezione orale?",
+                options: [
+                    "alitosi e placca",
+                    "mucosa rosea",
+                    "assenza di sintomi"
+                ],
+                correct: "alitosi e placca",
+                explanation: "Alitosi e placca indicano infezione orale. L’OSS deve eseguire un’igiene orale accurata, usare collutori se indicato, e segnalare all’infermiere."
+            },
+            {
+                question: "La rasatura del viso di un paziente allettato include:",
+                options: [
+                    "uso di rasoio pulito e schiuma",
+                    "rasatura senza schiuma",
+                    "ignorare la barba"
+                ],
+                correct: "uso di rasoio pulito e schiuma",
+                explanation: "La rasatura richiede un rasoio pulito e schiuma per prevenire irritazioni. L’OSS deve proteggere la cute, monitorare per tagli, e segnalare all’infermiere eventuali lesioni."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di irritazione da rasatura?",
+                options: [
+                    "arrossamento e bruciore",
+                    "cute liscia",
+                    "assenza di sintomi"
+                ],
+                correct: "arrossamento e bruciore",
+                explanation: "Arrossamento e bruciore indicano irritazione da rasatura. L’OSS deve applicare creme lenitive, evitare rasature frequenti, e segnalare all’infermiere."
+            },
+            {
+                question: "L’igiene dei capelli di un paziente allettato include:",
+                options: [
+                    "lavaggio con shampoo delicato",
+                    "uso di acqua bollente",
+                    "ignorare i capelli"
+                ],
+                correct: "lavaggio con shampoo delicato",
+                explanation: "L’igiene dei capelli richiede shampoo delicato e acqua tiepida. L’OSS deve proteggere il letto, massaggiare il cuoio capelluto, e segnalare all’infermiere segni di dermatite."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di dermatite del cuoio capelluto?",
+                options: [
+                    "prurito e desquamazione",
+                    "capelli lucidi",
+                    "assenza di sintomi"
+                ],
+                correct: "prurito e desquamazione",
+                explanation: "Prurito e desquamazione indicano dermatite. L’OSS deve monitorare il cuoio capelluto, usare prodotti delicati, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "L’igiene perineale di un paziente con incontinenza include:",
+                options: [
+                    "lavaggio con acqua tiepida e sapone neutro",
+                    "uso di detergenti aggressivi",
+                    "ignorare l’igiene"
+                ],
+                correct: "lavaggio con acqua tiepida e sapone neutro",
+                explanation: "L’igiene perineale richiede acqua tiepida e sapone neutro per prevenire irritazioni. L’OSS deve asciugare bene, cambiare i presidi, e segnalare all’infermiere arrossamenti."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di irritazione perineale?",
+                options: [
+                    "arrossamento e dolore",
+                    "cute integra",
+                    "assenza di sintomi"
+                ],
+                correct: "arrossamento e dolore",
+                explanation: "Arrossamento e dolore indicano irritazione perineale. L’OSS deve eseguire un’igiene accurata, applicare creme barriera, e segnalare all’infermiere."
+            },
+            {
+                question: "La gestione dell’igiene delle mani di un paziente include:",
+                options: [
+                    "lavaggio con sapone e acqua",
+                    "uso di alcool puro",
+                    "ignorare le mani"
+                ],
+                correct: "lavaggio con sapone e acqua",
+                explanation: "L’igiene delle mani richiede sapone e acqua per prevenire infezioni. L’OSS deve monitorare la cute, asciugare bene, e segnalare all’infermiere screpolature."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di infezione cutanea alle mani?",
+                options: [
+                    "arrossamento e secrezioni",
+                    "cute liscia",
+                    "assenza di sintomi"
+                ],
+                correct: "arrossamento e secrezioni",
+                explanation: "Arrossamento e secrezioni indicano infezione cutanea. L’OSS deve monitorare la cute, usare DPI, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "L’igiene degli occhi di un paziente include:",
+                options: [
+                    "pulizia con garze sterili e soluzione fisiologica",
+                    "uso di sapone",
+                    "ignorare le secrezioni"
+                ],
+                correct: "pulizia con garze sterili e soluzione fisiologica",
+                explanation: "L’igiene degli occhi richiede garze sterili e soluzione fisiologica per prevenire infezioni. L’OSS deve pulire dall’interno verso l’esterno e segnalare all’infermiere secrezioni anomale."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di infezione oculare?",
+                options: [
+                    "secrezioni giallastre",
+                    "occhi chiari",
+                    "assenza di sintomi"
+                ],
+                correct: "secrezioni giallastre",
+                explanation: "Secrezioni giallastre indicano infezione oculare. L’OSS deve eseguire un’igiene accurata, usare DPI, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "L’igiene delle orecchie di un paziente include:",
+                options: [
+                    "pulizia esterna con panno umido",
+                    "inserimento di bastoncini",
+                    "ignorare il cerume"
+                ],
+                correct: "pulizia esterna con panno umido",
+                explanation: "L’igiene delle orecchie richiede pulizia esterna con panno umido. L’OSS deve evitare bastoncini, monitorare il cerume, e segnalare all’infermiere ostruzioni."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di ostruzione da cerume?",
+                options: [
+                    "riduzione dell’udito",
+                    "udito normale",
+                    "assenza di sintomi"
+                ],
+                correct: "riduzione dell’udito",
+                explanation: "Riduzione dell’udito indica ostruzione da cerume. L’OSS deve monitorare il paziente, evitare manipolazioni, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "La gestione dell’igiene del naso di un paziente include:",
+                options: [
+                    "pulizia con garze umide",
+                    "inserimento di oggetti",
+                    "ignorare le secrezioni"
+                ],
+                correct: "pulizia con garze umide",
+                explanation: "L’igiene del naso richiede garze umide per rimuovere secrezioni. L’OSS deve monitorare il naso, evitare traumi, e segnalare all’infermiere epistassi."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di infezione nasale?",
+                options: [
+                    "secrezioni purulente",
+                    "mucosa rosea",
+                    "assenza di sintomi"
+                ],
+                correct: "secrezioni purulente",
+                explanation: "Secrezioni purulente indicano infezione nasale. L’OSS deve eseguire un’igiene accurata, usare DPI, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "L’igiene del corpo di un paziente con pelle secca include:",
+                options: [
+                    "uso di creme idratanti",
+                    "detergenti aggressivi",
+                    "ignorare la secchezza"
+                ],
+                correct: "uso di creme idratanti",
+                explanation: "La pelle secca richiede creme idratanti dopo il lavaggio. L’OSS deve monitorare la cute, evitare saponi aggressivi, e segnalare all’infermiere screpolature."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di pelle secca grave?",
+                options: [
+                    "desquamazione e prurito",
+                    "cute liscia",
+                    "assenza di sintomi"
+                ],
+                correct: "desquamazione e prurito",
+                explanation: "Desquamazione e prurito indicano pelle secca grave. L’OSS deve applicare idratanti, monitorare la cute, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "La gestione dell’igiene di un paziente con febbre include:",
+                options: [
+                    "spugnature con acqua tiepida",
+                    "copertura con coperte pesanti",
+                    "ignorare la temperatura"
+                ],
+                correct: "spugnature con acqua tiepida",
+                explanation: "La febbre richiede spugnature con acqua tiepida per abbassare la temperatura. L’OSS deve monitorare la temperatura, offrire liquidi, e segnalare all’infermiere valori elevati."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di febbre alta?",
+                options: [
+                    "brividi e sudorazione",
+                    "temperatura normale",
+                    "energia elevata"
+                ],
+                correct: "brividi e sudorazione",
+                explanation: "Brividi e sudorazione indicano febbre alta. L’OSS deve monitorare la temperatura, eseguire spugnature, e segnalare all’infermiere."
+            },
+            {
+                question: "L’igiene di un paziente con stomia cutanea include:",
+                options: [
+                    "pulizia della cute peristomale",
+                    "uso di sapone aggressivo",
+                    "ignorare la stomia"
+                ],
+                correct: "pulizia della cute peristomale",
+                explanation: "La stomia cutanea richiede pulizia della cute peristomale con acqua tiepida. L’OSS deve monitorare la cute, cambiare il sacchetto, e segnalare all’infermiere irritazioni."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di irritazione peristomale?",
+                options: [
+                    "arrossamento e bruciore",
+                    "cute integra",
+                    "assenza di sintomi"
+                ],
+                correct: "arrossamento e bruciore",
+                explanation: "Arrossamento e bruciore indicano irritazione peristomale. L’OSS deve eseguire una pulizia accurata, applicare barriere protettive, e segnalare all’infermiere."
+            },
+            {
+                question: "L’igiene di un paziente con bendaggi include:",
+                options: [
+                    "controllo della cute sotto il bendaggio",
+                    "lavaggio del bendaggio",
+                    "ignorare il bendaggio"
+                ],
+                correct: "controllo della cute sotto il bendaggio",
+                explanation: "I bendaggi richiedono controllo della cute per prevenire irritazioni. L’OSS deve monitorare la zona, evitare pressioni, e segnalare all’infermiere segni di infezione."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di infezione sotto un bendaggio?",
+                options: [
+                    "secrezioni e odore",
+                    "cute liscia",
+                    "assenza di sintomi"
+                ],
+                correct: "secrezioni e odore",
+                explanation: "Secrezioni e odore indicano infezione sotto il bendaggio. L’OSS deve monitorare la zona, usare DPI, e segnalare all’infermiere per una valutazione."
+            },
+            {
+                question: "L’igiene di un paziente con protesi include:",
+                options: [
+                    "pulizia della protesi e della cute",
+                    "lavaggio con alcool",
+                    "ignorare la protesi"
+                ],
+                correct: "pulizia della protesi e della cute",
+                explanation: "La protesi richiede pulizia della protesi e della cute sottostante. L’OSS deve monitorare la cute, evitare irritazioni, e segnalare all’infermiere arrossamenti."
+            },
+            {
+                question: "Quale tra i seguenti è un segno di irritazione da protesi?",
+                options: [
+                    "arrossamento e dolore",
+                    "cute liscia",
+                    "assenza di sintomi"
+                ],
+                correct: "arrossamento e dolore",
+                explanation: "Arrossamento e dolore indicano irritazione da protesi. L’OSS deve monitorare la cute, applicare creme se indicato, e segnalare all’infermiere."
+            }
+        ];
+
+        let currentQuestion = 0;
+
+        // Carica i quadratini di navigazione
+        function loadQuestionNav() {
+            const navDiv = document.getElementById("questionNav");
+            questions.forEach((_, index) => {
+                const box = document.createElement("div");
+                box.classList.add("question-box");
+                box.textContent = index + 1;
+                box.addEventListener("click", () => {
+                    showQuestion(index);
+                });
+                navDiv.appendChild(box);
+            });
+        }
+
+        // Carica il quiz
+        function loadQuiz() {
+            const quizDiv = document.getElementById("quiz");
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                questionDiv.id = `question-${index}`;
+                questionDiv.innerHTML = `
+                    <h3>${index + 541}. ${q.question}</h3>
+                    ${q.options.map((opt, i) => `
+                        <div class="option" data-value="${opt}">
+                            <input type="radio" name="q${index}" value="${opt}" id="q${index}_${i}">
+                            <label for="q${index}_${i}">${opt}</label>
+                            <span class="lamp" id="lamp-${index}-${i}">💡</span>
+                        </div>
+                    `).join("")}
+                    <div class="explanation" id="exp-${index}">${q.explanation}</div>
+                `;
+                quizDiv.appendChild(questionDiv);
+
+                const radios = questionDiv.querySelectorAll(`input[name="q${index}"]`);
+                radios.forEach(radio => {
+                    radio.addEventListener("change", () => {
+                        document.querySelectorAll(".question-box")[index].classList.add("answered");
+                    });
+                });
+            });
+            showQuestion(0);
+        }
+
+        // Mostra la domanda corrente
+        function showQuestion(index) {
+            document.querySelectorAll(".question").forEach(q => q.classList.remove("active"));
+            document.getElementById(`question-${index}`).classList.add("active");
+            currentQuestion = index;
+            document.getElementById("prev").disabled = currentQuestion === 0;
+            document.getElementById("next").disabled = currentQuestion === questions.length - 1;
+        }
+
+        // Timer (30 minuti)
+        let timeLeft = 30 * 60;
+        function startTimer() {
+            const timer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById("time").textContent = 
+                    `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    checkAnswers();
+                }
+            }, 1000);
+        }
+
+        // Controllo risposte e feedback visivo
+        function checkAnswers() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const options = document.querySelectorAll(`#question-${index} .option`);
+                options.forEach(option => {
+                    const value = option.getAttribute("data-value");
+                    if (value === q.correct) {
+                        option.classList.add("correct");
+                        const lamp = option.querySelector(".lamp");
+                        lamp.style.display = "inline";
+                        lamp.addEventListener("click", () => {
+                            const explanation = document.getElementById(`exp-${index}`);
+                            explanation.style.display = "block";
+                        });
+                    }
+                });
+                if (selected) {
+                    if (selected.value === q.correct) {
+                        score++;
+                    } else {
+                        selected.parentElement.classList.add("wrong");
+                    }
+                }
+            });
+            const resultDiv = document.getElementById("result");
+            resultDiv.textContent = `Punteggio: ${score} / ${questions.length}`;
+            document.getElementById("submit").disabled = true;
+            document.getElementById("prev").disabled = true;
+            document.getElementById("next").disabled = true;
+            document.querySelectorAll("input[type=radio]").forEach(radio => {
+                radio.disabled = true;
+            });
+        }
+
+        // Inizializzazione
+        window.onload = () => {
+            loadQuestionNav();
+            loadQuiz();
+            startTimer();
+            document.getElementById("prev").addEventListener("click", () => {
+                if (currentQuestion > 0) showQuestion(currentQuestion - 1);
+            });
+            document.getElementById("next").addEventListener("click", () => {
+                if (currentQuestion < questions.length - 1) showQuestion(currentQuestion + 1);
+            });
+            document.getElementById("submit").addEventListener("click", () => {
+                if (confirm("Sei sicuro di voler inviare le risposte?")) {
+                    checkAnswers();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
