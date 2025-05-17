@@ -3,15 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulazione Concorso Operatore Socio Sanitario - Modulo 19</title>
+    <title>Simulazione Concorso Operatore Socio Sanitario </title>
     <style>
-        /* Stesso stile CSS del Modulo 18, omesso per brevità */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            margin: 0;
+            padding: 20px;
+            color: #f0f0f0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700; }
+            to { text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700; }
+        }
+
+        #timer {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.5em;
+            color: #00eaff;
+            text-shadow: 0 0 5px #00eaff;
+        }
+
+        .question-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .question-box {
+            width: 40px;
+            height: 40px;
+            margin: 8px;
+            background: linear-gradient(45deg, #333, #555);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .question-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #ffd700;
+        }
+
+        .question-box.answered {
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            box-shadow: 0 0 15px #ffd700;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .question h3 {
+            margin: 0 0 15px 0;
+            color: #ffffff;
+            font-size: 1.6em;
+            text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+            line-height: 1.4;
+        }
+
+        .option {
+            margin: 10px 0;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: linear-gradient(90deg, #00eaff, #00b8d4);
+            color: #fff;
+            box-shadow: 0 0 15px #00eaff;
+        }
+
+        .option.wrong {
+            background: linear-gradient(90deg, #ff5252, #d81b60);
+            color: #fff;
+            box-shadow: 0 0 15px #ff5252;
+        }
+
+        .lamp {
+            display: none;
+            margin-left: 15px;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700;
+            transition: transform 0.3s ease;
+        }
+
+        .lamp:hover {
+            transform: scale(1.2);
+        }
+
+        .explanation {
+            margin-top: 15px;
+            font-style: italic;
+            color: #f0f0f0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            animation: slideIn 0.5s ease;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .nav-button {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
+            box-shadow: 0 0 10px #ffd700;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-button:disabled {
+            background: #666;
+            color: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ffd700;
+        }
+
+        button#submit {
+            display: block;
+            width: 250px;
+            margin: 20px auto;
+            padding: 15px;
+            background: linear-gradient(45deg, #00eaff, #00b8d4);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.3em;
+            box-shadow: 0 0 15px #00eaff;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        button#submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #00eaff;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.8em;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Simulazione Concorso Operatore Socio Sanitario - Modulo 19</h1>
+        <h1>Simulazione Concorso Operatore Socio Sanitario </h1>
         <div class="question-nav" id="questionNav"></div>
         <div id="timer">Tempo rimanente: <span id="time">30:00</span></div>
         <div id="quiz"></div>
@@ -332,126 +554,162 @@
 
         // Carica i quadratini di navigazione
         function loadQuestionNav() {
-            const navDiv = document.getElementById("questionNav");
-            questions.forEach((_, index) => {
-                const box = document.createElement("div");
-                box.classList.add("question-box");
-                box.textContent = index + 1;
-                box.addEventListener("click", () => {
-                    showQuestion(index);
+            try {
+                const navDiv = document.getElementById("questionNav");
+                if (!navDiv) throw new Error("Elemento questionNav non trovato");
+                questions.forEach((_, index) => {
+                    const box = document.createElement("div");
+                    box.classList.add("question-box");
+                    box.textContent = index + 1;
+                    box.addEventListener("click", () => {
+                        showQuestion(index);
+                    });
+                    navDiv.appendChild(box);
                 });
-                navDiv.appendChild(box);
-            });
+                console.log("Navigazione caricata con successo");
+            } catch (error) {
+                console.error("Errore in loadQuestionNav:", error);
+            }
         }
 
         // Carica il quiz
         function loadQuiz() {
-            const quizDiv = document.getElementById("quiz");
-            questions.forEach((q, index) => {
-                const questionDiv = document.createElement("div");
-                questionDiv.classList.add("question");
-                questionDiv.id = `question-${index}`;
-                questionDiv.innerHTML = `
-                    <h3>${index + 541}. ${q.question}</h3>
-                    ${q.options.map((opt, i) => `
-                        <div class="option" data-value="${opt}">
-                            <input type="radio" name="q${index}" value="${opt}" id="q${index}_${i}">
-                            <label for="q${index}_${i}">${opt}</label>
-                            <span class="lamp" id="lamp-${index}-${i}">💡</span>
-                        </div>
-                    `).join("")}
-                    <div class="explanation" id="exp-${index}">${q.explanation}</div>
-                `;
-                quizDiv.appendChild(questionDiv);
+            try {
+                const quizDiv = document.getElementById("quiz");
+                if (!quizDiv) throw new Error("Elemento quiz non trovato");
+                questions.forEach((q, index) => {
+                    const questionDiv = document.createElement("div");
+                    questionDiv.classList.add("question");
+                    questionDiv.id = `question-${index}`;
+                    questionDiv.innerHTML = `
+                        <h3>${index + 541}. ${q.question}</h3>
+                        ${q.options.map((opt, i) => `
+                            <div class="option" data-value="${opt}">
+                                <input type="radio" name="q${index}" value="${opt}" id="q${index}_${i}">
+                                <label for="q${index}_${i}">${opt}</label>
+                                <span class="lamp" id="lamp-${index}-${i}">💡</span>
+                            </div>
+                        `).join("")}
+                        <div class="explanation" id="exp-${index}">${q.explanation}</div>
+                    `;
+                    quizDiv.appendChild(questionDiv);
 
-                const radios = questionDiv.querySelectorAll(`input[name="q${index}"]`);
-                radios.forEach(radio => {
-                    radio.addEventListener("change", () => {
-                        document.querySelectorAll(".question-box")[index].classList.add("answered");
+                    const radios = questionDiv.querySelectorAll(`input[name="q${index}"]`);
+                    radios.forEach(radio => {
+                        radio.addEventListener("change", () => {
+                            document.querySelectorAll(".question-box")[index].classList.add("answered");
+                        });
                     });
                 });
-            });
-            showQuestion(0);
+                showQuestion(0);
+                console.log("Quiz caricato con successo");
+            } catch (error) {
+                console.error("Errore in loadQuiz:", error);
+            }
         }
 
         // Mostra la domanda corrente
         function showQuestion(index) {
-            document.querySelectorAll(".question").forEach(q => q.classList.remove("active"));
-            document.getElementById(`question-${index}`).classList.add("active");
-            currentQuestion = index;
-            document.getElementById("prev").disabled = currentQuestion === 0;
-            document.getElementById("next").disabled = currentQuestion === questions.length - 1;
+            try {
+                document.querySelectorAll(".question").forEach(q => q.classList.remove("active"));
+                const questionElement = document.getElementById(`question-${index}`);
+                if (!questionElement) throw new Error(`Domanda ${index} non trovata`);
+                questionElement.classList.add("active");
+                currentQuestion = index;
+                document.getElementById("prev").disabled = currentQuestion === 0;
+                document.getElementById("next").disabled = currentQuestion === questions.length - 1;
+            } catch (error) {
+                console.error("Errore in showQuestion:", error);
+            }
         }
 
         // Timer (30 minuti)
         let timeLeft = 30 * 60;
         function startTimer() {
-            const timer = setInterval(() => {
-                timeLeft--;
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                document.getElementById("time").textContent = 
-                    `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    checkAnswers();
-                }
-            }, 1000);
+            try {
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    const timeElement = document.getElementById("time");
+                    if (!timeElement) throw new Error("Elemento time non trovato");
+                    timeElement.textContent = 
+                        `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        checkAnswers();
+                    }
+                }, 1000);
+                console.log("Timer avviato");
+            } catch (error) {
+                console.error("Errore in startTimer:", error);
+            }
         }
 
         // Controllo risposte e feedback visivo
         function checkAnswers() {
-            let score = 0;
-            questions.forEach((q, index) => {
-                const selected = document.querySelector(`input[name="q${index}"]:checked`);
-                const options = document.querySelectorAll(`#question-${index} .option`);
-                options.forEach(option => {
-                    const value = option.getAttribute("data-value");
-                    if (value === q.correct) {
-                        option.classList.add("correct");
-                        const lamp = option.querySelector(".lamp");
-                        lamp.style.display = "inline";
-                        lamp.addEventListener("click", () => {
-                            const explanation = document.getElementById(`exp-${index}`);
-                            explanation.style.display = "block";
-                        });
+            try {
+                let score = 0;
+                questions.forEach((q, index) => {
+                    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                    const options = document.querySelectorAll(`#question-${index} .option`);
+                    options.forEach(option => {
+                        const value = option.getAttribute("data-value");
+                        if (value === q.correct) {
+                            option.classList.add("correct");
+                            const lamp = option.querySelector(".lamp");
+                            lamp.style.display = "inline";
+                            lamp.addEventListener("click", () => {
+                                const explanation = document.getElementById(`exp-${index}`);
+                                explanation.style.display = "block";
+                            });
+                        }
+                    });
+                    if (selected) {
+                        if (selected.value === q.correct) {
+                            score++;
+                        } else {
+                            selected.parentElement.classList.add("wrong");
+                        }
                     }
                 });
-                if (selected) {
-                    if (selected.value === q.correct) {
-                        score++;
-                    } else {
-                        selected.parentElement.classList.add("wrong");
-                    }
-                }
-            });
-            const resultDiv = document.getElementById("result");
-            resultDiv.textContent = `Punteggio: ${score} / ${questions.length}`;
-            document.getElementById("submit").disabled = true;
-            document.getElementById("prev").disabled = true;
-            document.getElementById("next").disabled = true;
-            document.querySelectorAll("input[type=radio]").forEach(radio => {
-                radio.disabled = true;
-            });
+                const resultDiv = document.getElementById("result");
+                if (!resultDiv) throw new Error("Elemento result non trovato");
+                resultDiv.textContent = `Punteggio: ${score} / ${questions.length}`;
+                document.getElementById("submit").disabled = true;
+                document.getElementById("prev").disabled = true;
+                document.getElementById("next").disabled = true;
+                document.querySelectorAll("input[type=radio]").forEach(radio => {
+                    radio.disabled = true;
+                });
+                console.log("Risposte controllate, punteggio:", score);
+            } catch (error) {
+                console.error("Errore in checkAnswers:", error);
+            }
         }
 
         // Inizializzazione
-        window.onload = () => {
-            loadQuestionNav();
-            loadQuiz();
-            startTimer();
-            document.getElementById("prev").addEventListener("click", () => {
-                if (currentQuestion > 0) showQuestion(currentQuestion - 1);
-            });
-            document.getElementById("next").addEventListener("click", () => {
-                if (currentQuestion < questions.length - 1) showQuestion(currentQuestion + 1);
-            });
-            document.getElementById("submit").addEventListener("click", () => {
-                if (confirm("Sei sicuro di voler inviare le risposte?")) {
-                    checkAnswers();
-                }
-            });
-        };
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                loadQuestionNav();
+                loadQuiz();
+                startTimer();
+                document.getElementById("prev").addEventListener("click", () => {
+                    if (currentQuestion > 0) showQuestion(currentQuestion - 1);
+                });
+                document.getElementById("next").addEventListener("click", () => {
+                    if (currentQuestion < questions.length - 1) showQuestion(currentQuestion + 1);
+                });
+                document.getElementById("submit").addEventListener("click", () => {
+                    if (confirm("Sei sicuro di voler inviare le risposte?")) {
+                        checkAnswers();
+                    }
+                });
+                console.log("Inizializzazione completata");
+            } catch (error) {
+                console.error("Errore nell'inizializzazione:", error);
+            }
+        });
     </script>
 </body>
 </html>
